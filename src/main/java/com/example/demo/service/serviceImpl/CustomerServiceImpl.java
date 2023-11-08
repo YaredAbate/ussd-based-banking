@@ -1,12 +1,12 @@
 package com.example.demo.service.serviceImpl;
 
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Customer;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +21,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(Customer customer) {
-        return  this.customerRepository.save(customer);
+    public Customer updateCustomer(long id,Customer customer) {
+        Customer updateCustomer=this.customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not exist with id: " + id));
+        updateCustomer.setEmail(customer.getEmail());
+        updateCustomer.setName(customer.getName());
+        updateCustomer.setPhoneNumber(customer.getPhoneNumber());
+        return  this.customerRepository.save(updateCustomer);
     }
 
     @Override

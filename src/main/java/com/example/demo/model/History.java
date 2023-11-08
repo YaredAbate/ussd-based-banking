@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-public class Transaction {
+public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,7 +17,7 @@ public class Transaction {
 
     private String transactionCode;
 
-    private String accountNum;
+    private String accountNumber;
 
     private String side;
 
@@ -28,18 +28,20 @@ public class Transaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date transactionDate;
 
-    public Transaction() {
+    private String phoneNumber;
+
+    public History() {
     }
 
-    public Transaction(String RRN, String transactionCode,
-                       String accountNum, String side, double amount, String responseCode, Date transactionDate) {
+    public History(String RRN, String transactionCode, String accountNumber,
+                   String side, double amount, String responseCode, Date transactionDate, String phoneNumber) {
         this.RRN = RRN;
         this.transactionCode = transactionCode;
-        this.accountNum = accountNum;
+        this.accountNumber = accountNumber;
         this.side = side;
         this.amount = amount;
         this.responseCode = responseCode;
         this.transactionDate = transactionDate;
+        this.phoneNumber = phoneNumber;
     }
 }
-

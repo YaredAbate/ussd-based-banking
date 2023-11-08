@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,20 +15,54 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String middleName;
     private String email;
-    private String phoneNumber;
+    private Date dob;
+    private String homePostalAddress;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
+    private String homePhone;
+    private String mobileNo;
 
     public Customer() {
     }
+
+    public Customer(String firstName, String lastName, String middleName, String email, Date dob, String homePostalAddress,
+                    String city, String state, String postalCode, String country, String homePhone, String mobileNo) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.email = email;
+        this.dob = dob;
+        this.homePostalAddress = homePostalAddress;
+        this.city = city;
+        this.state = state;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.homePhone = homePhone;
+        this.mobileNo = mobileNo;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "id=" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", middleName='" + middleName + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", dob=" + dob +
+                ", homePostalAddress='" + homePostalAddress + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", country='" + country + '\'' +
+                ", homePhone='" + homePhone + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
                 '}';
     }
 }
