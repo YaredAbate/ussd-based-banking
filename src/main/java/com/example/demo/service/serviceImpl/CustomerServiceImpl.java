@@ -22,10 +22,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(long id,Customer customer) {
-        Customer updateCustomer=this.customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not exist with id: " + id));
+        Customer updateCustomer=this.customerRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Customer not exist with id: " + id));
         updateCustomer.setEmail(customer.getEmail());
-        updateCustomer.setName(customer.getName());
-        updateCustomer.setPhoneNumber(customer.getPhoneNumber());
+        updateCustomer.setFirstName(customer.getFirstName());
+        updateCustomer.setMobileNo(customer.getMobileNo());
         return  this.customerRepository.save(updateCustomer);
     }
 
