@@ -24,10 +24,10 @@ public class AccountController {
         return accountService.getAccountById(id);
     }
 
-    @PostMapping
+    /*@PostMapping
     public Account createAccount(@RequestBody Account account) {
         return accountService.saveAccount(account);
-    }
+    }*/
 
     @PutMapping("/{id}")
     public Account updateAccount(@PathVariable Long id, @RequestBody Account account) {
