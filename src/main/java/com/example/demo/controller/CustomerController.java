@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -28,6 +29,14 @@ public class CustomerController {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
-    //@GetMapping()
-    //public ResponseEntity<List<Customer>> getCustomer()
+    @GetMapping()
+    public ResponseEntity<List<Customer>> getCustomers(){
+        List<Customer> getCustomers=this.customerService.getAllCustomers();
+        return ResponseEntity.ok(getCustomers);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Customer>> getCustomerById(@PathVariable long id){
+        Optional<Customer> getCustomer=this.customerService.getCustomerById(id);
+        return ResponseEntity.ok(getCustomer);
+    }
 }

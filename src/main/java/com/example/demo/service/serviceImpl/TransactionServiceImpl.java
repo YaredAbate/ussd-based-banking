@@ -1,5 +1,6 @@
 package com.example.demo.service.serviceImpl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Transaction;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.TransactionService;
@@ -27,6 +28,15 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public Transaction updateTransaction(Long id, Transaction transaction) {
+        Transaction updateTransaction=this.transactionRepository.
+                findById(id).orElseThrow(()->new ResourceNotFoundException("Transaction not found with id : "+id));
+        updateTransaction.setAccountNum(transaction.getAccountNum());
+        updateTransaction.setAmount(transaction.getAmount());
+        return updateTransaction;
     }
 
     @Override

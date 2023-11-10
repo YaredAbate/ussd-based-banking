@@ -31,9 +31,8 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public Transaction updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
-        // Set the id of the transaction to be updated
-        transaction.setId(id);
-        return transactionService.saveTransaction(transaction);
+        Transaction updateTransaction=this.transactionService.updateTransaction(id,transaction);
+        return updateTransaction;
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,9 @@
-package com.example.demo.service;
+package com.example.demo.service.serviceImpl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Account;
 import com.example.demo.repository.AccountRepository;
+import com.example.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account saveAccount(Account account) {
         return accountRepository.save(account);
+    }
+
+    @Override
+    public Account updateAccount(long id, Account account) {
+        Account updateAccount=this.accountRepository.findById(id).
+                orElseThrow(()->new ResourceNotFoundException("Account not exist with id :"+id));
+        updateAccount.setAccountNumber(account.getAccountNumber());
+        updateAccount.setAccountStatus(account.getAccountStatus());
+        updateAccount.setBalance(account.getBalance());
+        return this.accountRepository.save(updateAccount);
     }
 
     @Override

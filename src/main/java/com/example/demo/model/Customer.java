@@ -28,6 +28,7 @@ public class Customer {
     private String homePhone;
     private String mobileNo;
 
+
     public Customer() {
     }
 
