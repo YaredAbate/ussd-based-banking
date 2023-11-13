@@ -30,8 +30,8 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(account);
     }
 
-    @Override
-    public Account updateAccount(long id, Account account) {
+   @Override
+    public Account updateAccount1(long id, Account account) {
         Account updateAccount=this.accountRepository.findById(id).
                 orElseThrow(()->new ResourceNotFoundException("Account not exist with id :"+id));
         updateAccount.setAccountNumber(account.getAccountNumber());
@@ -43,6 +43,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(Long accountId) {
         accountRepository.deleteById(accountId);
+    }
+
+    @Override
+    public Account getAccountByAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
+    }
+
+    @Override
+    public void updateAccount(Account account) {
+        accountRepository.save(account);
     }
 }
 

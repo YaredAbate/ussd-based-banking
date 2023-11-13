@@ -37,6 +37,37 @@ public class TransactionController {
 
     @DeleteMapping("/{id}")
     public void deleteTransaction(@PathVariable Long id) {
+
         transactionService.deleteTransaction(id);
+    }
+    @PostMapping("/transfer")
+    public String transferFunds(@RequestParam String fromAccountNumber,
+                                @RequestParam String toAccountNumber,
+                                @RequestParam double amount) {
+        transactionService.transferFunds(fromAccountNumber, toAccountNumber, amount);
+        return "Funds transferred successfully";
+    }
+    @PostMapping("/cash-deposit")
+    public String initiateCashDeposit(@RequestParam String accountNumber, @RequestParam double amount) {
+        transactionService.initiateCashDeposit(accountNumber, amount);
+        return "Cash deposit initiated successfully.";
+    }
+
+    @PostMapping("/complete-cash-deposit")
+    public String completeCashDeposit(@RequestParam String otp) {
+        transactionService.completeCashDeposit(otp);
+        return "Cash deposit completed.";
+    }
+
+    @PostMapping("/cash-withdrawal")
+    public String initiateCashWithdrawal(@RequestParam String accountNumber, @RequestParam double amount) {
+        transactionService.initiateCashWithdrawal(accountNumber, amount);
+        return "Cash withdrawal initiated successfully.";
+    }
+
+    @PostMapping("/complete-cash-withdrawal")
+    public String completeCashWithdrawal(@RequestParam String otp) {
+        transactionService.completeCashWithdrawal(otp);
+        return "Cash withdrawal completed.";
     }
 }

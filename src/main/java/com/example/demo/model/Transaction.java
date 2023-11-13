@@ -1,10 +1,12 @@
 package com.example.demo.model;
 
+import com.example.demo.model.enumaration.TransactionStatus;
+import com.example.demo.model.enumaration.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
@@ -23,22 +25,30 @@ public class Transaction {
 
     private double amount;
 
+    private String otp;
     private String responseCode;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date transactionDate;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
+
+    private LocalDateTime transactionDate;
 
     public Transaction() {
     }
 
-    public Transaction(String RRN, String transactionCode,
-                       String accountNum, String side, double amount, String responseCode, Date transactionDate) {
+    public Transaction(String RRN, String transactionCode, String accountNum, String side, double amount, String otp, String responseCode,
+                       TransactionType transactionType, TransactionStatus status, LocalDateTime transactionDate) {
         this.RRN = RRN;
         this.transactionCode = transactionCode;
         this.accountNum = accountNum;
         this.side = side;
         this.amount = amount;
+        this.otp = otp;
         this.responseCode = responseCode;
+        this.transactionType = transactionType;
+        this.status = status;
         this.transactionDate = transactionDate;
     }
 }

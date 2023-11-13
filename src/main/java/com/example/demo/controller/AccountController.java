@@ -33,7 +33,7 @@ public class AccountController {
     public Account updateAccount(@PathVariable Long id, @RequestBody Account account) {
         // Set the id of the account to be updated
         account.setId(id);
-        return accountService.saveAccount(account);
+        return accountService.updateAccount1(id,account);
     }
 
     @DeleteMapping("/{id}")
