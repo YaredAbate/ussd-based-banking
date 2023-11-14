@@ -144,7 +144,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void initiateCashWithdrawal(String accountNumber, double amount) {
+    public String initiateCashWithdrawal(String accountNumber, double amount) {
         String otp = generateOTP();
         Transaction transaction = new Transaction();
         transaction.setTransactionType(CASH_WITHDRAWAL);
@@ -159,6 +159,7 @@ public class TransactionServiceImpl implements TransactionService {
         history.setAccountNumber(accountNumber);
         history.setAmount(amount);
         historyRepository.save(history);
+        return otp;
     }
 
     @Override

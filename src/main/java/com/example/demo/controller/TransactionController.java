@@ -49,7 +49,7 @@ public class TransactionController {
     }
     @PostMapping("/cash-deposit")
     public String initiateCashDeposit(@RequestParam String accountNumber, @RequestParam double amount) {
-        return "Cash deposit initiated successfully and the OTP is: "+
+        return "Cash deposit initiated successfully and the OTP is : "+
                 transactionService.initiateCashDeposit(accountNumber, amount);
     }
 
@@ -61,8 +61,9 @@ public class TransactionController {
 
     @PostMapping("/cash-withdrawal")
     public String initiateCashWithdrawal(@RequestParam String accountNumber, @RequestParam double amount) {
-        transactionService.initiateCashWithdrawal(accountNumber, amount);
-        return "Cash withdrawal initiated successfully.";
+
+        return "Cash withdrawal initiated successfully and the OTP is : "+
+                transactionService.initiateCashWithdrawal(accountNumber, amount);
     }
 
     @PostMapping("/complete-cash-withdrawal")

@@ -15,6 +15,6 @@ public interface TransactionService {
 
     String initiateCashDeposit(String accountNumber, double amount);
     void completeCashDeposit(String otp);
-    void initiateCashWithdrawal(String accountNumber, double amount);
+    String initiateCashWithdrawal(String accountNumber, double amount);
     void completeCashWithdrawal(String otp);
 }
