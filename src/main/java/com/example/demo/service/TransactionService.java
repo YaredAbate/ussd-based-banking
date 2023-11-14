@@ -13,7 +13,7 @@ public interface TransactionService {
     void deleteTransaction(Long transactionId);
     void transferFunds(String fromAccountNumber, String toAccountNumber, double amount);
 
-    void initiateCashDeposit(String accountNumber, double amount);
+    String initiateCashDeposit(String accountNumber, double amount);
     void completeCashDeposit(String otp);
     void initiateCashWithdrawal(String accountNumber, double amount);
     void completeCashWithdrawal(String otp);

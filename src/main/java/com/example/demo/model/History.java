@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 @Getter
 @Setter
@@ -25,8 +26,8 @@ public class History {
 
     private String responseCode;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date transactionDate;
+
+    private LocalDateTime transactionDate;
 
     private String phoneNumber;
 
@@ -34,7 +35,7 @@ public class History {
     }
 
     public History(String RRN, String transactionCode, String accountNumber,
-                   String side, double amount, String responseCode, Date transactionDate, String phoneNumber) {
+                   String side, double amount, String responseCode, LocalDateTime transactionDate, String phoneNumber) {
         this.RRN = RRN;
         this.transactionCode = transactionCode;
         this.accountNumber = accountNumber;

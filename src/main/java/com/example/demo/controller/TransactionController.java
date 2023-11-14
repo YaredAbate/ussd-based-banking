@@ -49,8 +49,8 @@ public class TransactionController {
     }
     @PostMapping("/cash-deposit")
     public String initiateCashDeposit(@RequestParam String accountNumber, @RequestParam double amount) {
-        transactionService.initiateCashDeposit(accountNumber, amount);
-        return "Cash deposit initiated successfully.";
+        return "Cash deposit initiated successfully and the OTP is: "+
+                transactionService.initiateCashDeposit(accountNumber, amount);
     }
 
     @PostMapping("/complete-cash-deposit")

@@ -2,7 +2,9 @@ package com.example.demo.service.serviceImpl;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Account;
+import com.example.demo.model.History;
 import com.example.demo.model.Transaction;
+import com.example.demo.repository.HistoryRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.TransactionService;
@@ -23,6 +25,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private HistoryRepository historyRepository;
     @Autowired
     private AccountService accountService;
 
@@ -74,13 +78,18 @@ public class TransactionServiceImpl implements TransactionService {
             fundTransfer.setAccountNum(toAccountNumber);
             fundTransfer.setAmount(amount);
             fundTransfer.setTransactionDate(LocalDateTime.now());
-
             transactionRepository.save(fundTransfer);
+            History history=new History();
+            history.setTransactionDate(LocalDateTime.now());
+            history.setAccountNumber(fromAccountNumber);
+            history.setAccountNumber(toAccountNumber);
+            history.setAmount(amount);
+            historyRepository.save(history);
         }
     }
 
     @Override
-    public void initiateCashDeposit(String accountNumber, double amount) {
+    public String initiateCashDeposit(String accountNumber, double amount) {
         String otp = generateOTP();
         Transaction transaction = new Transaction();
         transaction.setTransactionType(CASH_DEPOSIT);
@@ -89,8 +98,13 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setOtp(otp);
         transaction.setStatus(PENDING);
         transaction.setTransactionDate(LocalDateTime.now());
-
         transactionRepository.save(transaction);
+        History history=new History();
+        history.setTransactionDate(LocalDateTime.now());
+        history.setAccountNumber(accountNumber);
+        history.setAmount(amount);
+        historyRepository.save(history);
+        return otp;
     }
 
     @Override
@@ -101,7 +115,10 @@ public class TransactionServiceImpl implements TransactionService {
                 transaction.setStatus(SUCCESS);
                 transaction.setTransactionDate(LocalDateTime.now());
                 transactionRepository.save(transaction);
-
+                History history=new History();
+                history.setTransactionDate(LocalDateTime.now());
+                history.setTransactionCode(transaction.getTransactionCode());
+                historyRepository.save(history);
                 // Update customer account
                 Account customerAccount = accountService.getAccountByAccountNumber(transaction.
                         getAccountNum());
@@ -136,8 +153,12 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setOtp(otp);
         transaction.setStatus(PENDING);
         transaction.setTransactionDate(LocalDateTime.now());
-
         transactionRepository.save(transaction);
+        History history=new History();
+        history.setTransactionDate(LocalDateTime.now());
+        history.setAccountNumber(accountNumber);
+        history.setAmount(amount);
+        historyRepository.save(history);
     }
 
     @Override
@@ -148,6 +169,10 @@ public class TransactionServiceImpl implements TransactionService {
                 transaction.setStatus(SUCCESS);
                 transaction.setTransactionDate(LocalDateTime.now());
                 transactionRepository.save(transaction);
+                History history=new History();
+                history.setTransactionDate(LocalDateTime.now());
+                history.setTransactionCode(transaction.getTransactionCode());
+                historyRepository.save(history);
                 Account customerAccount = accountService.getAccountByAccountNumber(transaction.getAccountNum());
                 if (customerAccount != null) {
                     double newBalance = customerAccount.getBalance() - transaction.getAmount();
@@ -162,7 +187,6 @@ public class TransactionServiceImpl implements TransactionService {
                 transaction.setStatus(FAIL);
                 transaction.setTransactionDate(LocalDateTime.now());
                 transactionRepository.save(transaction);
-
                 System.out.println("Cash withdrawal failed. OTP expired.");
             }
         } else {
@@ -170,13 +194,10 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
     private String generateOTP() {
-        // Define the length of the OTP
         int otpLength = 6;
 
-        // Define the characters allowed in the OTP
         String allowedChars = "0123456789";
 
-        // Generate the OTP using SecureRandom
         StringBuilder otp = new StringBuilder(otpLength);
         SecureRandom random = new SecureRandom();
 

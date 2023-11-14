@@ -28,8 +28,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("My application title")
-                .description("This is a test of documenting EST API's")
+                .title("ussd-based-banking")
+                .description("This is a documentation for ussd-based-banking API's")
                 .version("V1.2")
                 .termsOfServiceUrl("http://terms-of-services.url")
                 .license("LICENSE")
