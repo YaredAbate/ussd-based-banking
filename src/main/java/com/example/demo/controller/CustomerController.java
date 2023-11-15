@@ -25,9 +25,8 @@ public class CustomerController {
         return ResponseEntity.ok(updateCustomer);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable long id){
+    public void deleteCustomer(@PathVariable long id){
         customerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build();
     }
     @GetMapping()
     public ResponseEntity<List<Customer>> getCustomers(){
