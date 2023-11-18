@@ -1,10 +1,10 @@
 package com.example.demo.service.serviceImpl;
 
 import com.example.demo.model.Account;
-import com.example.demo.model.ETopUpResponse;
+import com.example.demo.model.AirTime;
 import com.example.demo.model.Transaction;
 import com.example.demo.service.AccountService;
-import com.example.demo.service.ETopUpService;
+import com.example.demo.service.AirTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,21 +16,19 @@ import static com.example.demo.model.enumaration.TransactionStatus.SUCCESS;
 import static com.example.demo.model.enumaration.TransactionType.E_TOP_UP;
 
 @Service
-public class ETopUpServiceImpl implements ETopUpService {
+public class AirTimeServiceImpl implements AirTimeService {
     @Autowired
     private AccountService accountService;
     @Value("${external.api.url}")
     private String externalApiUrl;
-    private final RestTemplate restTemplate;
 
-    public ETopUpServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
-    public ETopUpResponse buyCard(int denomination,String accountNumber) {
+    public AirTime buyCard(int denomination, String accountNumber) {
         String apiUrl = externalApiUrl + "?Denomination=" + denomination;
-        ETopUpResponse eTopUpResponse = restTemplate.getForObject(apiUrl, ETopUpResponse.class);
+        AirTime airTime = restTemplate.getForObject(apiUrl, AirTime.class);
         Account userAccount = accountService.getAccountByAccountNumber(accountNumber);
         if (userAccount != null) {
             double newBalance = userAccount.getBalance() - denomination;
@@ -45,6 +43,6 @@ public class ETopUpServiceImpl implements ETopUpService {
             throw new RuntimeException("User account not found for account number: " + accountNumber);
         }
 
-        return eTopUpResponse;
+        return airTime;
     }
 }

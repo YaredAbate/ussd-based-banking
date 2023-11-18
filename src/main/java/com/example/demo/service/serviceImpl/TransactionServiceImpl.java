@@ -4,6 +4,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Account;
 import com.example.demo.model.History;
 import com.example.demo.model.Transaction;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.HistoryRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.AccountService;
@@ -16,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.example.demo.model.enumaration.CustomerType.MERCHANT;
 import static com.example.demo.model.enumaration.TransactionStatus.*;
 import static com.example.demo.model.enumaration.TransactionType.CASH_DEPOSIT;
 import static com.example.demo.model.enumaration.TransactionType.CASH_WITHDRAWAL;
@@ -27,6 +29,8 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private HistoryRepository historyRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
 
@@ -108,7 +112,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void completeCashDeposit(String otp) {
+    public void completeCashDeposit(String otp,String accountNumber) {
         Transaction transaction = transactionRepository.findByOtpAndStatus(otp, PENDING);
         if (transaction != null) {
             if (isOTPValid(transaction.getTransactionDate())) {
@@ -122,14 +126,18 @@ public class TransactionServiceImpl implements TransactionService {
                 // Update customer account
                 Account customerAccount = accountService.getAccountByAccountNumber(transaction.
                         getAccountNum());
-                if (customerAccount != null) {
+                Account merchantAccount=accountRepository.findByAccountNumberAndCustomerType(accountNumber,MERCHANT);
+                if (customerAccount != null && merchantAccount !=null) {
                     double newBalance = customerAccount.getBalance() + transaction.getAmount();
                     customerAccount.setBalance(newBalance);
                     accountService.updateAccount(customerAccount);
+                    double newMerchantBalance=merchantAccount.getBalance()-transaction.getAmount();
+                     merchantAccount.setBalance(newMerchantBalance);
+                    accountService.updateAccount(merchantAccount);
 
-                    System.out.println("Cash deposit completed successfully. Customer account updated.");
+                    System.out.println("Cash deposit completed successfully. Customer account and Merchant account updated.");
                 } else {
-                    System.out.println("Cash deposit failed. Customer account not found.");
+                    System.out.println("Cash deposit failed. Customer account or merchant account not found.");
                 }
             } else {
                 transaction.setStatus(FAIL);
@@ -163,7 +171,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void completeCashWithdrawal(String otp) {
+    public void completeCashWithdrawal(String otp,String accountNumber) {
         Transaction transaction = transactionRepository.findByOtpAndStatus(otp, PENDING);
         if (transaction != null) {
             if (isOTPValid(transaction.getTransactionDate())) {
@@ -174,11 +182,17 @@ public class TransactionServiceImpl implements TransactionService {
                 history.setTransactionDate(LocalDateTime.now());
                 history.setTransactionCode(transaction.getTransactionCode());
                 historyRepository.save(history);
-                Account customerAccount = accountService.getAccountByAccountNumber(transaction.getAccountNum());
-                if (customerAccount != null) {
+                Account customerAccount = accountService.getAccountByAccountNumber
+                        (transaction.getAccountNum());
+                Account merchantAccount=accountRepository.findByAccountNumberAndCustomerType
+                        (accountNumber,MERCHANT);
+                if (customerAccount != null && merchantAccount  !=null) {
                     double newBalance = customerAccount.getBalance() - transaction.getAmount();
                     customerAccount.setBalance(newBalance);
                     accountService.updateAccount(customerAccount);
+                    double newMerchantBalance=merchantAccount.getBalance()+transaction.getAmount();
+                    merchantAccount.setBalance(newMerchantBalance);
+                    accountService.updateAccount(merchantAccount);
                     System.out.println("Cash withdrawal completed successfully. Customer account updated.");
                 } else {
                     System.out.println("Cash withdrawal failed. Customer account not found.");
@@ -194,6 +208,12 @@ public class TransactionServiceImpl implements TransactionService {
             System.out.println("Cash withdrawal failed. Invalid OTP or transaction not found.");
         }
     }
+
+    @Override
+    public List<Transaction> getRecentTransactions() {
+        return transactionRepository.findTop5ByOrderByTransactionDateDesc();
+    }
+
     private String generateOTP() {
         int otpLength = 6;
 

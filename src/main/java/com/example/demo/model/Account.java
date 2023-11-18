@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.example.demo.model.enumaration.AccountStatus;
+import com.example.demo.model.enumaration.CustomerType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,9 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 
+    @Enumerated(EnumType.STRING)
+    private CustomerType customerType;
+
     @Column(nullable = false)
     private Date createdAt;
 
@@ -35,10 +39,12 @@ public class Account {
     public Account() {
     }
 
-    public Account(String accountNumber, double balance, AccountStatus accountStatus, Date createdAt, Date expiredAt) {
+    public Account(String accountNumber, double balance, AccountStatus accountStatus,CustomerType customerType,
+                   Date createdAt, Date expiredAt) {
         this.accountNumber = accountNumber;
         this.balance = balance;
         this.accountStatus = accountStatus;
+        this.customerType=customerType;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
         //this.customer = customer;

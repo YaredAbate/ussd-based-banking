@@ -14,7 +14,8 @@ public interface TransactionService {
     void transferFunds(String fromAccountNumber, String toAccountNumber, double amount);
 
     String initiateCashDeposit(String accountNumber, double amount);
-    void completeCashDeposit(String otp);
+    void completeCashDeposit(String otp,String accountNumber);
     String initiateCashWithdrawal(String accountNumber, double amount);
-    void completeCashWithdrawal(String otp);
+    void completeCashWithdrawal(String otp,String accountNumber);
+    List<Transaction> getRecentTransactions();
 }

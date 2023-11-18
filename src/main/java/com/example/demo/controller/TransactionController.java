@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/v2/transactions")
 public class TransactionController {
 
     @Autowired
@@ -23,7 +23,10 @@ public class TransactionController {
     public Transaction getTransactionById(@PathVariable Long id) {
         return transactionService.getTransactionById(id);
     }
-
+    @GetMapping("/")
+    public List<Transaction> getRecentTransaction(){
+        return transactionService.getRecentTransactions();
+    }
     @PostMapping
     public Transaction createTransaction(@RequestBody Transaction transaction) {
         return transactionService.saveTransaction(transaction);
@@ -54,8 +57,8 @@ public class TransactionController {
     }
 
     @PostMapping("/complete-cash-deposit")
-    public String completeCashDeposit(@RequestParam String otp) {
-        transactionService.completeCashDeposit(otp);
+    public String completeCashDeposit(@RequestParam String otp,@RequestParam String accountNumber) {
+        transactionService.completeCashDeposit(otp,accountNumber);
         return "Cash deposit completed.";
     }
 
@@ -67,8 +70,8 @@ public class TransactionController {
     }
 
     @PostMapping("/complete-cash-withdrawal")
-    public String completeCashWithdrawal(@RequestParam String otp) {
-        transactionService.completeCashWithdrawal(otp);
+    public String completeCashWithdrawal(@RequestParam String otp,@RequestParam String accountNumber) {
+        transactionService.completeCashWithdrawal(otp,accountNumber);
         return "Cash withdrawal completed.";
     }
 }

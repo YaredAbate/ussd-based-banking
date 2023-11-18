@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/MobileBankingUser")
+@RequestMapping("/api/v2/MobileBankingUser")
 
 public class MobileBankingUserController {
     @Autowired
     private MobileBankingUserService mobileBankingUserService;
     @GetMapping
-    public ResponseEntity<List<MobileBankingUser>> getAllHistory(){
+    public ResponseEntity<List<MobileBankingUser>> getAllMobileBankingUser(){
         List<MobileBankingUser> getAllMobileBankingUser=this.mobileBankingUserService.getAllMobileBankingUsers();
         return ResponseEntity.ok(getAllMobileBankingUser);
     }
@@ -35,5 +35,9 @@ public class MobileBankingUserController {
         MobileBankingUser updateMobileBankingUser=this.mobileBankingUserService.
                 updateMobileBankingUser(id,mobileBankingUser);
         return ResponseEntity.ok(updateMobileBankingUser);
+    }
+    @DeleteMapping
+    public void deleteMobileBankingUser(@PathVariable long id){
+        mobileBankingUserService.deleteMobileBankingUser(id);
     }
 }
