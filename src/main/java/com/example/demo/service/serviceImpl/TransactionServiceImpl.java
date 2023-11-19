@@ -64,11 +64,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount) {
+    public String transferFunds(String fromAccountNumber, String toAccountNumber, double amount) {
         Account fromAccount = accountService.getAccountByAccountNumber(fromAccountNumber);
         Account toAccount = accountService.getAccountByAccountNumber(toAccountNumber);
 
-        if (fromAccount != null && toAccount != null) {
+        if (fromAccount != null && toAccount != null && fromAccount.getBalance()>=amount) {
             fromAccount.setBalance(fromAccount.getBalance() - amount);
             toAccount.setBalance(toAccount.getBalance() + amount);
 
@@ -89,6 +89,10 @@ public class TransactionServiceImpl implements TransactionService {
             history.setAccountNumber(toAccountNumber);
             history.setAmount(amount);
             historyRepository.save(history);
+            return "Funds transferred successfully";
+        }
+        else{
+            return "Fund transfer UnSuccesfull";
         }
     }
 
@@ -112,8 +116,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void completeCashDeposit(String otp,String accountNumber) {
+    public String completeCashDeposit(String otp,String accountNumber) {
         Transaction transaction = transactionRepository.findByOtpAndStatus(otp, PENDING);
+        Account accountBalance=accountService.getAccountByAccountNumber(accountNumber);
         if (transaction != null) {
             if (isOTPValid(transaction.getTransactionDate())) {
                 transaction.setStatus(SUCCESS);
@@ -127,7 +132,8 @@ public class TransactionServiceImpl implements TransactionService {
                 Account customerAccount = accountService.getAccountByAccountNumber(transaction.
                         getAccountNum());
                 Account merchantAccount=accountRepository.findByAccountNumberAndCustomerType(accountNumber,MERCHANT);
-                if (customerAccount != null && merchantAccount !=null) {
+                if (customerAccount != null && merchantAccount !=null &&
+                        merchantAccount.getBalance()>=transaction.getAmount()) {
                     double newBalance = customerAccount.getBalance() + transaction.getAmount();
                     customerAccount.setBalance(newBalance);
                     accountService.updateAccount(customerAccount);
@@ -135,19 +141,20 @@ public class TransactionServiceImpl implements TransactionService {
                      merchantAccount.setBalance(newMerchantBalance);
                     accountService.updateAccount(merchantAccount);
 
-                    System.out.println("Cash deposit completed successfully. Customer account and Merchant account updated.");
+                    return("Cash deposit completed successfully. Customer account and Merchant account updated.");
                 } else {
-                    System.out.println("Cash deposit failed. Customer account or merchant account not found.");
+                    return("Cash deposit failed. " +
+                            "Customer account or merchant account not found or merchant account doesn't have enough money.");
                 }
             } else {
                 transaction.setStatus(FAIL);
                 transaction.setTransactionDate(LocalDateTime.now());
                 transactionRepository.save(transaction);
 
-                System.out.println("Cash deposit failed. OTP expired.");
+                return("Cash deposit failed. OTP expired.");
             }
         } else {
-            System.out.println("Cash deposit failed. Invalid OTP or transaction not found.");
+            return ("Cash deposit failed. Invalid OTP or transaction not found.");
         }
     }
 
@@ -169,6 +176,60 @@ public class TransactionServiceImpl implements TransactionService {
         historyRepository.save(history);
         return otp;
     }
+    @Override
+    public String merchantCashWithdrawal(String accountNumber, double amount) {
+        Account merchantAccount = accountRepository.findByAccountNumberAndCustomerType(accountNumber, MERCHANT);
+        if (merchantAccount != null) {
+            if (merchantAccount.getBalance() >= amount) {
+                Transaction transaction = new Transaction();
+                transaction.setTransactionType(CASH_WITHDRAWAL);
+                transaction.setAccountNum(accountNumber);
+                transaction.setAmount(amount);
+                transaction.setStatus(SUCCESS);
+                transaction.setTransactionDate(LocalDateTime.now());
+                transactionRepository.save(transaction);
+                History history = new History();
+                history.setTransactionDate(LocalDateTime.now());
+                history.setAccountNumber(accountNumber);
+                history.setAmount(amount);
+                historyRepository.save(history);
+                double newBalance = merchantAccount.getBalance() - amount;
+                merchantAccount.setBalance(newBalance);
+                accountService.updateAccount(merchantAccount);
+                return "Cash Withdrawal Successful";
+            } else {
+                return "Cash withdrawal is not sucessful";
+            }
+        }
+        else{
+            return "the Customer Type is not merchant";
+        }
+    }
+
+    @Override
+    public String merchantCashDeposit(String accountNumber, double amount) {
+        Account merchantAccount = accountRepository.findByAccountNumberAndCustomerType(accountNumber, MERCHANT);
+        if (merchantAccount != null) {
+                Transaction transaction = new Transaction();
+                transaction.setTransactionType(CASH_DEPOSIT);
+                transaction.setAccountNum(accountNumber);
+                transaction.setAmount(amount);
+                transaction.setStatus(SUCCESS);
+                transaction.setTransactionDate(LocalDateTime.now());
+                transactionRepository.save(transaction);
+                History history = new History();
+                history.setTransactionDate(LocalDateTime.now());
+                history.setAccountNumber(accountNumber);
+                history.setAmount(amount);
+                historyRepository.save(history);
+                double newBalance = merchantAccount.getBalance() + amount;
+                merchantAccount.setBalance(newBalance);
+                accountService.updateAccount(merchantAccount);
+                return "Cash Deposit Successful";
+            } else {
+                return "Cash Deposit is not sucessful because the Customer Type is not merchant";
+            }
+        }
 
     @Override
     public void completeCashWithdrawal(String otp,String accountNumber) {

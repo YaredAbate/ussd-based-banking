@@ -11,10 +11,12 @@ public interface TransactionService {
     Transaction saveTransaction(Transaction transaction);
     Transaction updateTransaction(Long id,Transaction transaction);
     void deleteTransaction(Long transactionId);
-    void transferFunds(String fromAccountNumber, String toAccountNumber, double amount);
+    String transferFunds(String fromAccountNumber, String toAccountNumber, double amount);
 
     String initiateCashDeposit(String accountNumber, double amount);
-    void completeCashDeposit(String otp,String accountNumber);
+    String completeCashDeposit(String otp,String accountNumber);
+    String merchantCashWithdrawal(String accountNumber, double amount);
+    String merchantCashDeposit(String accountNumber,double amount);
     String initiateCashWithdrawal(String accountNumber, double amount);
     void completeCashWithdrawal(String otp,String accountNumber);
     List<Transaction> getRecentTransactions();

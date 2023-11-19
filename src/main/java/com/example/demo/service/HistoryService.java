@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+@Service
 public interface HistoryService {
     public History createHistory(History history);
     public Optional<History> getHistoryById(Long id);

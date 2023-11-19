@@ -47,8 +47,8 @@ public class TransactionController {
     public String transferFunds(@RequestParam String fromAccountNumber,
                                 @RequestParam String toAccountNumber,
                                 @RequestParam double amount) {
-        transactionService.transferFunds(fromAccountNumber, toAccountNumber, amount);
-        return "Funds transferred successfully";
+
+        return  transactionService.transferFunds(fromAccountNumber, toAccountNumber, amount);
     }
     @PostMapping("/cash-deposit")
     public String initiateCashDeposit(@RequestParam String accountNumber, @RequestParam double amount) {
@@ -58,10 +58,16 @@ public class TransactionController {
 
     @PostMapping("/complete-cash-deposit")
     public String completeCashDeposit(@RequestParam String otp,@RequestParam String accountNumber) {
-        transactionService.completeCashDeposit(otp,accountNumber);
-        return "Cash deposit completed.";
+        return transactionService.completeCashDeposit(otp,accountNumber);
     }
-
+    @PostMapping("/merchant-cash-deposit")
+    public String merchantCashDeposit(@RequestParam String accountNumber, @RequestParam double amount){
+        return transactionService.merchantCashDeposit(accountNumber,amount);
+    }
+    @PostMapping("/merchant-cash-withdrawal")
+    public String merchantCashWithdrawal(@RequestParam String accountNumber, @RequestParam double amount){
+        return transactionService.merchantCashWithdrawal(accountNumber,amount);
+    }
     @PostMapping("/cash-withdrawal")
     public String initiateCashWithdrawal(@RequestParam String accountNumber, @RequestParam double amount) {
 
