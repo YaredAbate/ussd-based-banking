@@ -14,5 +14,7 @@ public interface MobileBankingUserService {
     public Optional<MobileBankingUser> getMobileBankingUserById(Long id);
     public List<MobileBankingUser> getAllMobileBankingUsers();
     public void deleteMobileBankingUser(Long id);
+    public MobileBankingUser createMobileBankingUserForCustomer
+            (String customerUsername, MobileBankingUser mobileBankingUser);
 
 }

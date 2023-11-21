@@ -1,4 +1,5 @@
 package com.example.demo.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String middleName;
+    @Column(nullable = false, unique = true)
     private String email;
     private Date dob;
     private String homePostalAddress;
@@ -29,6 +31,11 @@ public class Customer {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="accountId")
     List<Account> accounts;
+
+   @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
+   @JsonManagedReference
+   private MobileBankingUser mobileBankingUser;
+
     public Customer() {
     }
 

@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.example.demo.model.enumaration.IsMobileBankingUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,13 +14,13 @@ public class MobileBankingUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many-to-One relationship with Customer
-    @ManyToOne
+    //@OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
-
-    @Column(nullable = false, unique = true)
-    private String CIF;
+    //@Column(nullable = false, unique = true)
+    //private String CIF;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -32,21 +34,23 @@ public class MobileBankingUser {
     private int version;
 
     private String language;
+    @Enumerated(EnumType.STRING)
+    private IsMobileBankingUser isMobileBankingUser;
 
     public MobileBankingUser() {
     }
 
-    public MobileBankingUser(Customer customer, String CIF,
-                             String username, String PIN, String password, String phoneNumber,
-                             int version, String language) {
-        this.customer = customer;
-        this.CIF = CIF;
+    public MobileBankingUser(String username, String PIN, String password, String phoneNumber,
+                             int version, String language,IsMobileBankingUser isMobileBankingUser) {
+        //this.customer = customer;
+        //this.CIF = CIF;
         this.username = username;
         this.PIN = PIN;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.version = version;
         this.language = language;
+        this.isMobileBankingUser=isMobileBankingUser;
     }
 }
 

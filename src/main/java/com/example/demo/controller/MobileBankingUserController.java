@@ -15,9 +15,10 @@ public class MobileBankingUserController {
     @Autowired
     private MobileBankingUserService mobileBankingUserService;
     @GetMapping
-    public ResponseEntity<List<MobileBankingUser>> getAllMobileBankingUser(){
-        List<MobileBankingUser> getAllMobileBankingUser=this.mobileBankingUserService.getAllMobileBankingUsers();
-        return ResponseEntity.ok(getAllMobileBankingUser);
+    public List<MobileBankingUser> getAllMobileBankingUser(){
+        List<MobileBankingUser> getAllMobileBankingUser=this.mobileBankingUserService.
+                getAllMobileBankingUsers();
+        return getAllMobileBankingUser;
     }
     @GetMapping("/{id}")
     public Optional<MobileBankingUser> getMobileBankingUserById(@PathVariable long id){
@@ -38,6 +39,15 @@ public class MobileBankingUserController {
     }
     @DeleteMapping
     public void deleteMobileBankingUser(@PathVariable long id){
-        mobileBankingUserService.deleteMobileBankingUser(id);
+        mobileBankingUserService
+                .deleteMobileBankingUser(id);
+    }
+    @PostMapping("/createForCustomer")
+    public ResponseEntity<MobileBankingUser> createMobileBankingUserForCustomer(
+            @RequestParam String customerEmail,
+            @RequestBody MobileBankingUser mobileBankingUser) {
+        MobileBankingUser createdMobileBankingUser = mobileBankingUserService
+                .createMobileBankingUserForCustomer(customerEmail, mobileBankingUser);
+        return ResponseEntity.ok(createdMobileBankingUser);
     }
 }

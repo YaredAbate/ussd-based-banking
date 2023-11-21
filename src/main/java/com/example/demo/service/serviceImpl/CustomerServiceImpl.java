@@ -32,6 +32,8 @@ public class CustomerServiceImpl implements CustomerService {
         updateCustomer.setHomePhone(customer.getHomePhone());
         updateCustomer.setCountry(customer.getCountry());
         updateCustomer.setMiddleName(customer.getMiddleName());
+        updateCustomer.setMobileBankingUser(customer.getMobileBankingUser());
+        updateCustomer.setAccounts(customer.getAccounts());
         return  this.customerRepository.save(updateCustomer);
     }
 

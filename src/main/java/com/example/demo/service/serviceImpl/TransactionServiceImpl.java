@@ -2,9 +2,11 @@ package com.example.demo.service.serviceImpl;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Account;
+import com.example.demo.model.Customer;
 import com.example.demo.model.History;
 import com.example.demo.model.Transaction;
 import com.example.demo.repository.AccountRepository;
+import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.HistoryRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.AccountService;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.demo.model.enumaration.CustomerType.MERCHANT;
+import static com.example.demo.model.enumaration.IsMobileBankingUser.YES;
 import static com.example.demo.model.enumaration.TransactionStatus.*;
 import static com.example.demo.model.enumaration.TransactionType.CASH_DEPOSIT;
 import static com.example.demo.model.enumaration.TransactionType.CASH_WITHDRAWAL;
@@ -27,6 +30,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
     @Autowired
     private HistoryRepository historyRepository;
     @Autowired
@@ -65,34 +70,39 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public String transferFunds(String fromAccountNumber, String toAccountNumber, double amount) {
-        Account fromAccount = accountService.getAccountByAccountNumber(fromAccountNumber);
-        Account toAccount = accountService.getAccountByAccountNumber(toAccountNumber);
+        Customer customer=customerRepository.
+                findByAccounts_AccountNumberAndMobileBankingUser_IsMobileBankingUser(fromAccountNumber,YES);
+        if(customer!=null) {
+            Account fromAccount = accountService.getAccountByAccountNumber(fromAccountNumber);
+            Account toAccount = accountService.getAccountByAccountNumber(toAccountNumber);
 
-        if (fromAccount != null && toAccount != null && fromAccount.getBalance()>=amount) {
-            fromAccount.setBalance(fromAccount.getBalance() - amount);
-            toAccount.setBalance(toAccount.getBalance() + amount);
+            if (fromAccount != null && toAccount != null && fromAccount.getBalance() >= amount) {
+                fromAccount.setBalance(fromAccount.getBalance() - amount);
+                toAccount.setBalance(toAccount.getBalance() + amount);
 
-            // Update account balances in the database
-            accountService.updateAccount(fromAccount);
-            accountService.updateAccount(toAccount);
+                // Update account balances in the database
+                accountService.updateAccount(fromAccount);
+                accountService.updateAccount(toAccount);
 
-            // Record the fund transfer
-            Transaction fundTransfer = new Transaction();
-            fundTransfer.setAccountNum(fromAccountNumber);
-            fundTransfer.setAccountNum(toAccountNumber);
-            fundTransfer.setAmount(amount);
-            fundTransfer.setTransactionDate(LocalDateTime.now());
-            transactionRepository.save(fundTransfer);
-            History history=new History();
-            history.setTransactionDate(LocalDateTime.now());
-            history.setAccountNumber(fromAccountNumber);
-            history.setAccountNumber(toAccountNumber);
-            history.setAmount(amount);
-            historyRepository.save(history);
-            return "Funds transferred successfully";
-        }
-        else{
-            return "Fund transfer UnSuccesfull";
+                // Record the fund transfer
+                Transaction fundTransfer = new Transaction();
+                fundTransfer.setAccountNum(fromAccountNumber);
+                fundTransfer.setAccountNum(toAccountNumber);
+                fundTransfer.setAmount(amount);
+                fundTransfer.setTransactionDate(LocalDateTime.now());
+                transactionRepository.save(fundTransfer);
+                History history = new History();
+                history.setTransactionDate(LocalDateTime.now());
+                history.setAccountNumber(fromAccountNumber);
+                history.setAccountNumber(toAccountNumber);
+                history.setAmount(amount);
+                historyRepository.save(history);
+                return "Funds transferred successfully";
+            } else {
+                return "Fund transfer UnSuccesfull";
+            }
+        }else{
+            return "Customer is not mobile banking User";
         }
     }
 
