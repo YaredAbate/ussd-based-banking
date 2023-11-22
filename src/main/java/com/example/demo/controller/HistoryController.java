@@ -24,13 +24,13 @@ public class HistoryController {
         Optional<History> getHistoryById=this.historyService.getHistoryById(id);
         return getHistoryById;
     }
-    @PostMapping
+   /* @PostMapping
     public ResponseEntity<History> createHistory(@RequestBody History history){
         History createdHistory=this.historyService.createHistory(history);
         return ResponseEntity.ok(createdHistory);
-    }
-    @DeleteMapping("/{id}")
+    }*/
+    /*@DeleteMapping("/{id}")
     public void deleteHistory(@PathVariable long id){
         this.historyService.deleteHistory(id);
-    }
+    }*/
 }

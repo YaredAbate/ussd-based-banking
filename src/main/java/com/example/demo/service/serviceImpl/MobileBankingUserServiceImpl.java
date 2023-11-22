@@ -32,6 +32,7 @@ public class MobileBankingUserServiceImpl implements MobileBankingUserService {
         updateMobileBankingUser.setPassword(mobileBankingUser.getPassword());
         updateMobileBankingUser.setPIN(mobileBankingUser.getPIN());
         updateMobileBankingUser.setLanguage(mobileBankingUser.getLanguage());
+        updateMobileBankingUser.setIsMobileBankingUser(mobileBankingUser.getIsMobileBankingUser());
         updateMobileBankingUser.setUsername(mobileBankingUser.getUsername());
         return this.mobileBankingUserRepository.save(updateMobileBankingUser);
     }

@@ -17,7 +17,7 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String middleName;
-    @Column(nullable = false, unique = true)
+
     private String email;
     private Date dob;
     private String homePostalAddress;

@@ -22,16 +22,18 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public Optional<History> getHistoryById(Long id) {
-        return Optional.empty();
+
+        return historyRepository.findById(id);
     }
 
     @Override
     public List<History> getAllHistories() {
-        return null;
+
+        return historyRepository.findAll();
     }
 
     @Override
     public void deleteHistory(Long id) {
-
+        historyRepository.deleteById(id);
     }
 }

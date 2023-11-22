@@ -27,22 +27,22 @@ public class TransactionController {
     public List<Transaction> getRecentTransaction(){
         return transactionService.getRecentTransactions();
     }
-    @PostMapping
+    /*@PostMapping
     public Transaction createTransaction(@RequestBody Transaction transaction) {
         return transactionService.saveTransaction(transaction);
-    }
+    }*/
 
-    @PutMapping("/{id}")
+   /* @PutMapping("/{id}")
     public Transaction updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
         Transaction updateTransaction=this.transactionService.updateTransaction(id,transaction);
         return updateTransaction;
-    }
+    }*/
 
-    @DeleteMapping("/{id}")
+   /* @DeleteMapping("/{id}")
     public void deleteTransaction(@PathVariable Long id) {
 
         transactionService.deleteTransaction(id);
-    }
+    }*/
     @PostMapping("/transfer")
     public String transferFunds(@RequestParam String fromAccountNumber,
                                 @RequestParam String toAccountNumber,
