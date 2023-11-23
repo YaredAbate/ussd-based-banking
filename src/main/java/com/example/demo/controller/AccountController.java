@@ -38,6 +38,11 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable Long id) {
+
         accountService.deleteAccount(id);
+    }
+    @GetMapping("/")
+    public double getBalanceByAccountNumber(@RequestParam String accountNumber){
+        return accountService.getBalanceByAccountNumber(accountNumber);
     }
 }

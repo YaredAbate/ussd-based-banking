@@ -13,4 +13,5 @@ public interface AccountService {
     void deleteAccount(Long accountId);
     Account getAccountByAccountNumber(String accountNumber); // New method
     void updateAccount(Account account);
+    double getBalanceByAccountNumber(String accountNumber);
 }

@@ -1,5 +1,8 @@
 package com.example.demo.model;
-
+/*
+*
+*
+* */
 import com.example.demo.model.enumaration.AccountStatus;
 import com.example.demo.model.enumaration.CustomerType;
 import lombok.Getter;

@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     Transaction findByOtpAndStatus(String otp, TransactionStatus status);
-    List<Transaction> findTop5ByOrderByTransactionDateDesc();
+    List<Transaction> findTop5ByAccountNumOrderByTransactionDateDesc(String accountNumber);
 }

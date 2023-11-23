@@ -19,5 +19,5 @@ public interface TransactionService {
     String merchantCashDeposit(String accountNumber,double amount);
     String initiateCashWithdrawal(String accountNumber, double amount);
     void completeCashWithdrawal(String otp,String accountNumber);
-    List<Transaction> getRecentTransactions();
+    List<Transaction> getRecentTransactions(String AccountNumber);
 }

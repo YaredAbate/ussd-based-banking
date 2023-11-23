@@ -24,8 +24,8 @@ public class TransactionController {
         return transactionService.getTransactionById(id);
     }
     @GetMapping("/")
-    public List<Transaction> getRecentTransaction(){
-        return transactionService.getRecentTransactions();
+    public List<Transaction> getRecentTransaction(@RequestParam String accountNumber){
+        return transactionService.getRecentTransactions(accountNumber);
     }
     /*@PostMapping
     public Transaction createTransaction(@RequestBody Transaction transaction) {
